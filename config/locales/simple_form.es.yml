@@ -1,0 +1,29 @@
+es:
+  simple_form:
+    "yes": 'Si'
+    "no": 'No'
+
+    required:
+      text: 'requerido'
+      mark: '·'
+
+    error_notification:
+      default_message: "Se encontraron algunos errores, por favor, corríge los siguientes:"
+
+    # Labels and hints examples
+    labels:
+      password: 'Contraseña'
+
+      client:
+        name: "Nombre"
+        address: "Dirección postal"
+        postcode: "Código postal"
+        city: "Ciudad"
+        country: "País"
+        email: "Correo electrónico"
+        phone: "Teléfono"
+    
+    hints:
+      username: 'Su nombre de usuario, por favor.'
+      password: 'Su contraseña, por favor.'
+      

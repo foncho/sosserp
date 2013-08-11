@@ -1,0 +1,90 @@
+$ ->
+	# Array con un Hash de descuentos asociados a todos lo clientes
+	# Seria mas eficiente encontrar el objeto directamente
+	discounts = <%= Discount.select("client_id, value").order("client_id").to_json %>
+
+	# Funcion para refrescar los calculos
+	refreshCalculations = (item) ->
+		quantity = item.parent().parent().parent().parent().find("#quantity").val()
+		product = item.parent().parent().parent().parent().find("#product").val()
+		partial = item.parent().parent().parent().parent().find("#partial-amount")
+		discount = item.parent().parent().parent().parent().parent().parent().parent().parent().find("#discount").val()
+			
+		setPartialAmount quantity, product, discount, partial
+		setTotalAmount $(".t"), $("#tax1").val(), $("#tax2").val()
+
+	# Funcion que calcula subtotales
+	setPartialAmount = (q, p, d, tag) ->
+		console.log p + " :: " + q
+		up = 0
+		discount = 0
+		result = 0
+		
+		unless p is ""
+			up = p.split(";")[1]
+		else
+			up = 0
+		
+		unless d is ""
+			discount = (up * q) * (d / 100)
+		else
+			discount = 0
+		
+		subtotal = (up * q) - discount
+		console.log subtotal
+		result = subtotal
+		console.log result.toFixed(2)
+		tag.val result.toFixed(2)
+
+	# Funcion para calcular el valor total de la factura/albaran
+	setTotalAmount = (objs, t1, t2) ->
+		console.log t1 + ' :: ' + t2
+		result = 0
+		tax = 0
+		irpf = 0
+	
+		objs.each ->
+			result += parseFloat($(this).val())
+		
+		tax = t1.split(";")[1] / 100  unless t1 is "" || typeof t1 is 'undefined'
+		irpf = t2.split(";")[1] / 100  unless t2 is "" || typeof t2 is 'undefined'
+
+		console.log irpf
+		tax_calculation = result * tax
+		irpf_calculation = result * irpf
+		console.log irpf_calculation
+		final = result + tax_calculation + irpf_calculation
+		console.log final.toFixed(2)
+		$("#total").val final.toFixed(2)
+
+	# Autocompletamos el nombre del cliente y realizamos tareas de refresco en los calculos
+	$('#clients').autocomplete
+		minLength: 0
+		source: '/clients'
+		select: (e, ui) ->
+			console.log ui.item.id
+			dis = d.discount.value for d in discounts when (d.discount.client_id == ui.item.id)
+			console.log dis
+			$('#discount').val dis
+			$('.t').each ->
+				refreshCalculations @
+
+	# Miramos los cambios producidos en los campos editables
+	$(document).on "change", "#quantity", (e) ->
+		refreshCalculations $(this)
+
+	$(document).on "change", "#product", (e) ->
+		refreshCalculations $(this)
+	
+	$(document).on "change", "#discount", (e) ->
+		refreshCalculations $(this)
+		
+	$(document).on "change", "#tax1", (e) ->
+		setTotalAmount $(".t"), $("#tax1").val(), $("#tax2").val()
+		
+	$(document).on "change", "#tax2", (e) ->
+		setTotalAmount $(".t"), $("#tax1").val(), $("#tax2").val()
+
+	# Inicializamos el form
+	$(".t").each ->
+		refreshCalculations $(this)

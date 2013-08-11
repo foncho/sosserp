@@ -1,0 +1,14 @@
+<tr>
+	<td><%= link_to estimate.number, estimate_path(estimate) %></td>
+	<td><%= estimate.client.name unless estimate.client.nil? %></td>
+	<td><%=l estimate.delivery_date, format: "%A, día %d de %B de %Y" %></td>
+	<td style="text-align: center;">
+		<%= number_to_currency estimate.total_price %>
+	</td>
+	<td>
+		<%= link_to t('.show', default: t("helpers.links.show")), estimate_path(estimate), class: 'btn btn-mini btn-info' %>
+		<%= link_to t('.send', default: t("helpers.links.send")), "#", onclick: "alert('Estamos trabajando en ello.')", class: 'btn btn-mini btn-success' %>
+		<%= link_to t('.print', default: t("helpers.links.print")), estimate_to_pdf_path(estimate), class: 'btn btn-mini btn-inverse' %>
+		<%= link_to t('.destroy', default: t("helpers.links.destroy")), estimate_path(estimate), method: :delete, data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) }, class: 'btn btn-mini btn-danger' %>
+	</td>
+</tr>

@@ -1,0 +1,103 @@
+<div class="page-header" style="border: 0;">
+	<h1 class="lead">
+		<%= t '.title', 
+			default: "Presupuesto"
+		%>
+		<%= @estimate.number %>
+	</h1>
+	
+	<div class="logo_sirokko">
+		<%= image_tag "#{Rails.root}/app/assets/images/logo_sirokko_300.png" %>
+	</div>
+	
+	<h1 class="lead">
+		<%= @estimate.client.name unless @estimate.client.nil? %><br />
+		<div style="font-size: 12px;">
+			C.I.F.: <%= @estimate.client.cif unless @estimate.client.nil? %><br />
+			<%= @estimate.client.address unless @estimate.client.nil? %><br />
+			tlf: <%= @estimate.client.phone unless @estimate.client.nil? %><br />
+			email: <%= @estimate.client.email unless @estimate.client.nil? %>
+		</div>
+	</h1>
+</div>
+
+<div class="row-fluid">
+	<div class="span12">
+		<%= @estimate.project.description.html_safe %>
+		<br />
+		<h3 class="lead">Duración estimada del proyecto (en días): <%= @estimate.project.estimation_time_in_days %> días.</h3>
+		<br />
+	</div>
+</div>
+
+<br />
+
+<div class="row-fluid" id="line-items">
+	<table class="table table-striped">
+		<thead>
+			<th><%= "Cantidad" %></th>
+			<th><%= "Producto" %></th>
+			<th><%= "Precio unitario" %></th>
+			<th><%= "Importe" %></th>
+			<th><%= "Impuesto" %></th>
+			<% unless @estimate.client.discount.nil? %>
+				<th><%= "Descuento" %></th>
+			<% end %>
+			<th><%= "Total" %></th>
+		</thead>
+
+		<tbody>
+			<% @estimate.line_items.each do |line_item| %>
+			<tr>
+				<td><%= line_item.quantity %></td>
+				<td style="max-width: 175px;">
+					<div style="text-align: left;">
+						<h5><%= line_item.product.name %></h5>
+						<ul>
+							<% line_item.product.items.each do |item| %>
+								<li><%= item.title %></li>
+							<% end %>
+						</ul>
+					</div>
+				</td>
+				<td><%= number_to_currency line_item.product.items.sum(:price) %></td>
+				<td>
+					<%= number_to_currency line_item.product.items.sum(:price) * line_item.quantity %>
+				</td>
+				<td>
+					<%= number_to_currency line_item.tax_calculation * line_item.quantity %>
+				</td>
+				<% unless @estimate.client.discount.nil? %>
+					<td>
+						<%= number_to_currency (line_item.discount_calculation * -1) * line_item.quantity %>
+					</td>
+				<% end %>
+				<td><%= number_to_currency line_item.total_price %></td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+	
+	<div class="span8 alert" style="float: left; margin: 0; width: 60%;">
+		<%= (@estimate.observations.blank? or @estimate.observations.nil?) ? "No hay observaciones." : @estimate.observations.html_safe %>
+	</div>
+	
+	<table class="table table-striped" style="width: 30%; margin-left: 70%;">
+		<tr>
+			<td><%= "Subtotal" %></td>
+			<td style="text-align: right;"><%= number_to_currency @estimate.line_items.to_a.sum { |line| line.product.items.sum :price } %></td>
+		</tr>
+		<tr>
+			<td><%= @estimate.tax.name.split(" ").first if @estimate.tax %></td>
+			<td style="text-align: right;"><%= number_to_currency @estimate.line_items.to_a.sum { |line| line.tax_calculation * line.quantity } %></td>
+		</tr>
+		<tr>
+			<td><%= "Descuento" %></td>
+			<td style="text-align: right; color: red;"><%= number_to_currency @estimate.line_items.to_a.sum { |line| line.discount_calculation * line.quantity } * -1 %></td>
+		</tr>
+		<tr>
+			<td><%= "TOTAL" %></td>
+			<td style="text-align: right; font-weight: bold;"><%= number_to_currency @estimate.total_price %></td>
+		</tr>
+	</table>
+</div>

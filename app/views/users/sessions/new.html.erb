@@ -1,0 +1,40 @@
+<div class="box offset4">
+	<h1 class="lead">Acceder</h1>
+	
+	<%= bootstrap_flash %>
+	
+	<%= simple_form_for resource, as: resource_name, url: session_path(resource_name), html: { method: "post", class: "form-horizontal" } do |f| %>
+		<%= f.input :username,
+			autofocus: true,
+			autocomplete: "off",
+			label: false,
+			placeholder: "Nombre de usuario",
+			required: false,
+			hint: false,
+			input_html: {
+				class: "input-xlarge"
+			}
+		%>
+		<br />
+		<%= f.input :password,
+			autofocus: true,
+			autocomplete: "off",
+			label: false,
+			placeholder: "Contraseña",
+			required: false,
+			hint: false,
+			input_html: {
+				class: "input-xlarge"
+			}
+		%>
+		<br />
+		
+		<label class="checkbox">
+			<input type="checkbox" name="user[remember_me]" />Recordarme
+		</label>
+		
+		<div class="form-actions" style="border-top: 0; background: transparent; margin: 0; padding: 19px 0 20px;">
+			<%= f.button :submit, t("devise.sessions.new"), class: "btn btn-info" %>
+		</div>
+	<% end %>
+</div>

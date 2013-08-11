@@ -1,0 +1,54 @@
+<%= f.input :number,
+	label: "Número de factura",
+	required: false,
+	as: :string,
+	input_html: {
+		class: "input-small"
+	}
+%>
+
+<table>
+	<tr>
+		<td>
+			<%= f.input :client_id,
+				as: :string,
+				label: "Cliente",
+				required: true,
+				input_html: {
+					class: "input-xxlarge",
+					id: "clients",
+					value: (@invoice.client.name if @invoice.client)
+				}
+			%>
+		</td>
+	<%= f.simple_fields_for :client_attributes do |cf| %>
+			<%= cf.simple_fields_for :discount do |df| %>
+				<td>
+					<%= df.input :value,
+						label: "Descuento aplicado",
+						required: false,
+						input_html: {
+							class: "input-mini",
+							id: "discount",
+							value: (@invoice.client.discount.value unless @invoice.client.discount.nil? unless @invoice.client.nil?)
+						},
+						disabled: true
+					%>
+				</td>
+			<% end %>
+	<% end %>
+			<td>
+				<%= f.input :expiration_date,
+					label: "Fecha de vencimiento:",
+					data: { 
+						behavior: "datepicker"
+					},
+					as: :string,
+					input_html: {
+						class: "datepicker"
+					},
+					order: [:day, :month, :year]
+				%>
+			</td>
+		</tr>
+</table>

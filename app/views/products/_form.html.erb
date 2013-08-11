@@ -1,0 +1,35 @@
+<%= simple_nested_form_for @product, html: { class: 'form-vertical' } do |f| %>
+	<%= f.input :name, label: "Nombre del producto", required: false %>
+	<%= f.input :code, label: "Código de producto", as: :string, required: false %>
+	
+	<% i = 0 %>
+	<%= f.simple_fields_for :items do |item_form| %>
+		<table>
+			<tr>
+				<td>
+					<%= item_form.input :title,
+						input_html: {
+							class: "input-large"
+						},
+						selected: (@product.items[i].title unless @product.items[i].nil?),
+						prompt: "Select sub-item..."
+					%>
+				</td>
+				<td>
+					<%= item_form.input :price, as: :string, required: false %>
+				</td>
+				<td>
+					<%= item_form.link_to_remove "Remove", class: "btn btn-mini btn-inverse" %>
+				</td>
+			</tr>
+		</table>
+		<% i += 1 %>
+	<% end %>
+	
+	<%= f.link_to_add "Add sub-item", :items, class: "btn btn-mini btn-success" %>
+	
+	<div class="form-actions">
+		<%= f.button :submit, class: 'btn btn-primary' %>
+		<%= link_to t('.cancel', default: t("helpers.links.cancel")), products_path, class: 'btn' %>
+	</div>
+<% end %>

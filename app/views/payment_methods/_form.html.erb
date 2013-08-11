@@ -1,0 +1,8 @@
+<%= simple_form_for @payment_method, html: { class: 'form-vertical' } do |f| %>
+	<%= f.input :name %>
+	
+	<div class="form-actions">
+		<%= f.button :submit, class: 'btn btn-primary' %>
+		<%= link_to t('.cancel', default: t("helpers.links.cancel")), payment_methods_path, class: 'btn' %>
+	</div>
+<% end %>

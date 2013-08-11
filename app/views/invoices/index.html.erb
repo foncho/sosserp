@@ -1,0 +1,142 @@
+<%= @shortcut %>
+
+<%- model_class = Invoice -%>
+
+<div class="page-header">
+	<h1 class="lead"><%=t '.title', default: model_class.model_name.human.pluralize %></h1>
+	
+	<% unless request.user_agent =~ /Mobile|webOS/ %>
+		<div class="import-dialog">
+			<h2 class="lead">Importar</h2>
+			<%= form_tag import_invoices_path, multipart: true do %>
+				<div class="fileupload fileupload-new" data-provides="fileupload">
+					<span class="btn btn-file">
+						<span class="fileupload-new">Elige fichero</span>
+						<span class="fileupload-exists">Cambiar</span>
+						<%= file_field_tag :file %>
+					</span>
+					<%= submit_tag "Importar", class: "btn btn-primary", id: "import-button" %>
+					<br />
+					<span class="fileupload-preview"></span>
+					<a href="#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none">×</a>
+				</div>
+			<% end %>
+		</div>
+	<% end %>
+	
+	<div class="container">
+		<div class="hero-unit">
+			<h2 class="lead">Cálculo de resultados</h2>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Total neto</th>
+						<th>IGIC repercutido</th>
+						<th>IVA repercutido</th>
+						<th>IRPF practicado</th>
+						<th>Total bruto</th>
+					</tr>
+				</thead>
+				<tbody class="results">
+					<%= render 'results' %>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<% if not @errors.nil? %>
+		<%= bootstrap_flash %>
+	<% end %>
+	
+	<table class="form-search">
+		<%= form_tag invoices_path, method: :get, remote: true, html: { class: "form-inline" } do %>
+			<tr>
+				<td><%= label_tag :client_id, "Cliente:" %></td>
+				<td><%= label_tag :status, "Estado del gasto:" %></td>
+				<td><%= label_tag :payment_method_id, "Método de pago:" %></td>
+				<td><%= label_tag :begin_date, "Fecha inicio:" %></td>
+				<td><%= label_tag :end_date, "Fecha fin:" %></td>
+			</tr>
+
+			<tr>
+				<td>
+					<%= select_tag :client_id,
+						options_for_select(Client.all.map { |c| [c.name.capitalize, c.id] }),
+						{
+							include_blank: false,
+							prompt: "Todos",
+							class: "input-large"
+						}
+					%>
+				</td>
+				
+				<td>
+					<%= select_tag :status,
+						options_for_select(Invoice::STATUS.map { |i| i }),
+						{
+							include_blank: false,
+							prompt: "Todos",
+							class: "input-medium"
+						}
+					%>
+				</td>
+				
+				<td>
+					<%= select_tag :payment_method_id,
+						options_for_select(PaymentMethod.all.sort.map { |i| [i.name, i.id] }),
+						{
+							include_blank: false,
+							prompt: "Todos",
+							class: "input-large"
+						}
+					%>
+				</td>
+				
+				<td>
+					<%= text_field_tag :begin_date,	nil, class: "datepicker input-small" %>
+				</td>
+				
+				<td>
+					<%= text_field_tag :end_date, nil, class: "datepicker input-small" %>
+				</td>
+				
+				<td>
+					<%= submit_tag "Buscar", class: "btn", id: "search-button" %>
+				</td>
+			</tr>
+		<% end %>
+	</table>
+</div>
+
+<% if @invoices.empty? %>
+	<div class="alert">
+		No hay facturas generadas. <%= link_to "Generar tu primera factura", new_invoice_path %>
+	</div>
+<% else %>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th><%= "ID" %></th>
+				<th><%= "Cliente" %></th>
+				<th><%= "Importe" %></th>
+				<th><%= "Impuesto1" %></th>
+				<th><%= "Impuesto2" %></th>
+				<th><%= "Descuento" %></th>
+				<th><%= "Total" %></th>
+				<th><%= "Forma de pago" %></th>
+				<th><%= "Status" %></th>
+				<th><%=t '.actions', default: t("helpers.actions") %></th>
+			</tr>
+		</thead>
+	
+		<tbody class="invoices">
+			<%= render @invoices %>
+		</tbody>
+	</table>
+	
+	<div id="paginator">
+		<%= paginate @invoices, remote: true %>
+	</div>
+
+	<%= link_to t('.new', default: t("helpers.links.new")), new_invoice_path, class: 'btn btn-primary' %>
+<% end %>

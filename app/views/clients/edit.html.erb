@@ -1,0 +1,15 @@
+<% model_class = Client %>
+
+<h1 class="lead">
+	<%= t '.title',
+		default: [
+			:"helpers.titles.edit",
+			"Editing %{model}"
+		],
+		model: model_class.model_name.human
+	%>
+	datos de
+	<%= @client.name %>
+</h1>
+
+<%= render 'form', model_class: model_class %>

@@ -1,0 +1,65 @@
+<%- model_class = Client -%>
+
+<div class="page-header">
+	<%= bootstrap_flash %>
+	
+	<div style="float: right; margin-top: -60px;">
+		<% unless request.user_agent =~ /Mobile|webOS/ %>
+			<div class="import-dialog">
+				<h2 class="lead">Importar</h2>
+				<%= form_tag import_clients_path, multipart: true do %>
+					<div class="fileupload fileupload-new" data-provides="fileupload">
+						<span class="btn btn-file">
+							<span class="fileupload-new">Elige fichero</span>
+							<span class="fileupload-exists">Cambiar</span>
+							<%= file_field_tag :file %>
+						</span>
+						<%= submit_tag "Importar", class: "btn btn-primary", id: "import-button" %>
+						<br />
+						<span class="fileupload-preview"></span>
+						<a href="#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none">×</a>
+					</div>
+				<% end %>
+			</div>
+			<div style="margin-top: 20px;"></div>
+		<% end %>
+	</div>
+		
+	<h1 class="lead">
+		<%=t '.title', default: model_class.model_name.human.capitalize.pluralize %>
+	</h1>
+	
+	<div class="product-functions">
+		<div>
+			Download: 
+			<%= link_to "CSV", clients_path(format: "csv") %>
+		</div>
+	</div>
+</div>
+
+<table class="table table-striped" style="font-size: 12px;">
+	<thead>
+		<tr>
+			<th><%= t "views.models.clients.id" %></th>
+			<th><%= t "views.models.clients.cif" %></th>
+			<th><%= t "views.models.clients.name" %></th>
+			<th><%= t "views.models.clients.discount" %></th>
+			<th><%= t "views.models.clients.email" %></th>
+			<th><%= t "views.models.clients.phone" %></th>
+			<th><%= t "views.models.clients.address" %></th>
+			<th><%= t "views.models.clients.city" %></th>
+			<th><%= t "views.models.clients.contact" %></th>
+			<th><%=t '.actions', default: t("helpers.actions") %></th>
+		</tr>
+	</thead>
+	
+	<tbody class="clients">
+		<%= render @clients %>
+	</tbody>
+</table>
+
+<div id="paginator" class="pagination">
+	<%= paginate @clients, remote: true %>
+</div>
+
+<%= link_to t('.new', :default => t("helpers.links.new")), new_client_path, class: 'btn btn-primary' %>

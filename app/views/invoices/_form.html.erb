@@ -1,0 +1,11 @@
+<%= simple_nested_form_for @invoice, html: { class: 'form-vertical' } do |f| %>
+	<%= bootstrap_flash %>
+	<%= render 'header_data', f: f %>	
+	<%= render 'line_items', f: f %>
+	<%= render 'tax_and_total', f: f %>
+	
+	<div class="form-actions">
+		<%= f.button :submit, class: 'btn btn-primary' %>
+		<%= link_to t('.cancel', default: t("helpers.links.cancel")), invoices_path, class: 'btn' %>
+	</div>
+<% end %>

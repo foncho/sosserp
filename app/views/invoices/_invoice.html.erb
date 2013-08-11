@@ -1,0 +1,18 @@
+<tr>
+	<td><%= link_to invoice.number, invoice_path(invoice) %></td>
+	<td><%= invoice.client.name %></td>
+	<td><%= number_to_currency invoice.line_items.to_a.sum { |line| line.subtotal } %></td>
+	<td><%= number_to_currency invoice.line_items.to_a.sum { |line| line.tax_calculation * line.quantity } %></td>
+	<td style="color: red;"><%= number_to_currency invoice.line_items.to_a.sum { |line| line.irpf_calculation * line.quantity } %></td>
+	<td style="color: red;"><%= number_to_currency invoice.line_items.to_a.sum { |line| line.discount_calculation * line.quantity } * -1 %></td>
+	<td><%= number_to_currency invoice.line_items.to_a.sum { |line| line.total_price } %></td>
+	<td><%= invoice.payment_method.name if not invoice.payment_method_id.nil? %></td>
+	<td><%= invoice.status if not invoice.status.nil? %></td>
+	<td>
+		<%= link_to t('.show', default: t("helpers.links.show")), invoice_path(invoice), class: 'btn btn-mini btn-info' %>
+		<%= link_to t('.edit', default: t("helpers.links.edit")), edit_invoice_path(invoice), class: 'btn btn-mini btn-warning' %>
+		<%= link_to t('.send', default: t("helpers.links.send")), "#", onclick: "alert('Estamos trabajando en ello.')", class: 'btn btn-mini btn-success' %>
+		<%= link_to t('.print', default: t("helpers.links.print")), invoice_to_pdf_path(invoice), class: 'btn btn-mini btn-inverse' %>
+		<%= link_to t('.destroy', default: t("helpers.links.destroy")), invoice_path(invoice), method: :delete, data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) }, class: 'btn btn-mini btn-danger' %>
+	</td>
+</tr>

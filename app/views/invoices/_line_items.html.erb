@@ -1,0 +1,47 @@
+<% i = 0 %>
+<%= f.simple_fields_for :line_items do |lif| %>
+	<table>
+		<tr>
+			<td>
+				<%= lif.input :quantity,
+					as: :string,
+					label: "Cantidad",
+					input_html: {
+						class: "input-mini",
+						id: "quantity"
+					}
+				%>
+			</td>
+			<td>
+				<%= lif.input :product_id,
+					collection: Product.all.map { |product| [product.name, "#{product.id};#{product.items.sum :price}"] },
+					label: "Producto",
+					input_html: {
+						id: "product",
+						class: "input-xxlarge"
+					},
+					default: (@invoice.line_items[i].product_id unless @invoice.line_items[i].nil?),
+					prompt: "Selecciona producto..."
+				%>
+			</td>
+			<td>
+				<%= lif.input :total_price,
+					label: "Total",
+					as: :string,
+					input_html: {
+						class: "input-small t",
+						id: "partial-amount"
+					},
+					disabled: true
+				%>
+			</td>
+			<td>
+				<div class="control-group" style="padding-left: 70px;">
+					<%= lif.link_to_remove "Quitar", class: "btn btn-mini btn-inverse" %>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<% i += 1 %>
+<% end %>
+<%= f.link_to_add "+ productos", :line_items, class: "btn btn-mini btn-success" %>

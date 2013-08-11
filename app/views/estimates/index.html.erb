@@ -1,0 +1,74 @@
+<%- model_class = Estimate -%>
+
+<div class="page-header">
+	<div style="float: right; margin-top: -60px;">
+		<% unless request.user_agent =~ /Mobile|webOS/ %>
+			<div class="import-dialog">
+				<h1 class="lead">Importar</h1>
+				<%= form_tag import_estimates_path, multipart: true do %>
+					<div class="fileupload fileupload-new" data-provides="fileupload">
+						<span class="btn btn-file">
+							<span class="fileupload-new">Elige fichero</span>
+							<span class="fileupload-exists">Cambiar</span>
+							<%= file_field_tag :file %>
+						</span>
+						<%= submit_tag "Importar", class: "btn btn-primary", id: "import-button" %>
+						<br />
+						<span class="fileupload-preview"></span>
+						<a href="#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none">×</a>
+					</div>
+				<% end %>
+			</div>
+			<div style="margin-top: 20px;"></div>
+		<% end %>
+	
+		<table class="form-search">
+			<%= form_tag estimates_path, method: :get, remote: true, html: { class: "form-inline" } do %>
+				<tr>
+					<td><%= label_tag :client_id, "Cliente:" %></td>
+				</tr>
+				<tr>
+					<td><%= select_tag :client_id, options_for_select(Client.all.map { |c| [c.name.capitalize, c.id] }), { include_blank: false, prompt: "Todos", class: "span2" } %></td>
+					<td><%= submit_tag "Buscar", class: "btn", id: "search-button" %></td>
+				</tr>
+			<% end %>
+		</table>
+	</div>
+	
+	<h1 class="lead"><%= t '.title', default: "Albaranes" %></h1>
+	
+	<div class="product-functions">
+		<div>
+			Download: 
+			<%= link_to "CSV", estimates_path(format: "csv") %>
+		</div>
+	</div>
+</div>
+
+<% if @estimates.empty? %>
+	<div class="alert">
+		No hay presupuestos generados. <%= link_to "Generar tu primer presupuesto", new_estimate_path %>.
+	</div>
+<% else %>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th><%= "Número de presupuesto" %></th>
+				<th><%= "Cliente" %></th>
+				<th><%= "Fecha de envío" %></th>
+				<th><%= "Cuantía total" %></th>
+				<th><%=t '.actions', default: t("helpers.actions") %></th>
+			</tr>
+		</thead>
+	
+		<tbody class="estimates">
+			<%= render @estimates %>
+		</tbody>
+	</table>
+	
+	<div id="paginator">
+		<%= paginate @estimates, remote: true %>
+	</div>
+<% end %>
+
+<%= link_to "Nuevo presupuesto", new_estimate_path, class: 'btn btn-primary' %>

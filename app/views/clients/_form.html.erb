@@ -1,0 +1,29 @@
+<%= simple_form_for @client, html: { class: 'form-horizontal' } do |f| %>
+	<%= bootstrap_flash %>
+	<div style="padding: 20px;">
+		<%= f.input :code, label: t("views.models.clients.id"), input_html: { class: "input-small" } %>
+		<%= f.input :name, label: t("views.models.clients.name"), input_html: { class: "input-xlarge" } %>
+		<%= f.input :cif, label: t("views.models.clients.cif"), input_html: { class: "input-small" } %>
+		<%= f.input :contact, label: t("views.models.clients.contact"), input_html: { class: "input-large" } %>
+		
+		<%= f.simple_fields_for @client.new_record? ? :discount_attributes : :discount do |df| %>
+			<%= df.input :value, required: false, label: t("views.models.clients.discount"), input_html: { class: "input-mini" }, hint: "(en %)" %>
+			<%= df.input :client_id, as: :hidden, input_html: { value: (@client.id if @client.id) } %>
+		<% end %>
+		
+		<%= f.input :address, input_html: { rows: 5, class: "input-xlarge" }, label: t("views.models.clients.address") %>
+		<%= f.input :city, label: t("views.models.clients.city"), input_html: { class: "input-large" } %>
+		<%= f.input :province, label: t("views.models.clients.province"), input_html: { class: "input-large" } %>
+		<%= f.input :postcode, label: t("views.models.clients.postcode"), input_html: { class: "input-small" } %>
+		<%= f.input :country, as: :select, collection: t(:countries).map { |key, value| [value, key] }.sort, label: t("views.models.clients.country"), prompt: "Selecciona país...", input_html: { class: "input-large" } %>
+		<%= f.input :phone, label: t("views.models.clients.phone"), input_html: { class: "input-medium" } %>
+		<%= f.input :fax, label: t("views.models.clients.fax"), input_html: { class: "input-medium" } %>
+		<%= f.input :email, label: t("views.models.clients.email"), input_html: { class: "input-xlarge" } %>
+		<%= f.input :observations, input_html: { rows: 5, class: "input-xlarge" }, label: t("views.models.clients.observations") %>
+	</div>
+		
+	<div class="form-actions">
+		<%= f.button :submit, class: 'btn btn-primary' %>
+		<%= link_to t('.cancel', default: t("helpers.links.cancel")), clients_path, class: 'btn btn-danger' %>
+	</div>
+<% end %>

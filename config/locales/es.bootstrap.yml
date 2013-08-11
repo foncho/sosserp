@@ -1,0 +1,19 @@
+# encoding: UTF-8
+
+es:        
+  helpers:
+    actions: "Acciones"
+    links:
+      back: "Atrás"
+      cancel: "Cancelar"
+      confirm: "¿Estás seguro?"
+      destroy: "Eliminar"
+      new: "Nuevo"
+      close: "Cerrar"
+    
+    titles:
+      edit: "Editar"
+      save: "Guardar"
+      new: "Nuevo"
+      delete: "Eliminar"
+        

@@ -1,0 +1,156 @@
+<%= simple_nested_form_for @estimate, html: { class: 'form-vertical' } do |f| %>
+	<%= bootstrap_flash %>
+
+	<%= f.input :number,
+		label: "Número de presupuesto: ",
+		as: :string,
+		required: false,
+		input_html: {
+			class: "input-mini"
+		} %>
+	
+	<table>
+		<tr>
+			<td>
+				<%= f.input :client_id,
+					as: :string,
+					label: "Cliente",
+					required: false,
+					input_html: {
+						class: "input-xxlarge",
+						id: "clients",
+						value: (@estimate.user.nil? ? (@estimate.client.name unless @estimate.client.nil?) : ("#{@estimate.user.name} #{@estimate.user.surestimatename}" unless @estimate.user.nil?))
+					}
+				%>
+			</td>
+		<%= f.simple_fields_for :client_attributes do |cf| %>
+			<%= cf.simple_fields_for :discount do |df| %>
+				<td>
+					<%= df.input :value,
+						label: "Descuento aplicado",
+						required: false,
+						input_html: {
+							class: "input-mini",
+							id: "discount",
+							value: (@estimate.client.discount.value unless (@estimate.client.nil? or @estimate.client.discount.nil?))
+						},
+						disabled: true
+					%>
+				</td>
+			<% end %>
+		<% end %>
+			</tr>
+	</table>
+	
+	<%= f.simple_fields_for :project do |pf| %>
+		<%= pf.input :description,
+			as: :ckeditor,
+			input_html: {
+				ckeditor: {
+					toolbar: "Full",
+					height: "500px"
+				},
+				value: @estimate.project.description.html_safe
+			}
+		%>
+		<%= pf.input :estimation_time_in_days,
+			label: "Duración estimada del proyecto",
+			hint: "(en días)"
+		%>
+	<% end %>
+	
+	<% i = 0 %>	
+	<%= f.fields_for :line_items do |lif| %>
+		<table>
+			<tr>
+				<td>
+					<%= lif.input :quantity,
+						as: :string,
+						label: "Cantidad",
+						input_html: {
+							class: "input-mini",
+							id: "quantity"
+						}
+					%>
+				</td>
+				<td>
+					<%= lif.input :product_id,
+						collection: Product.all.map { |product| [product.name, "#{product.id};#{product.items.sum :price}"] },
+						label: "Producto",
+						input_html: {
+							id: "product",
+							class: "input-large p"
+						},
+						selected: (@estimate.line_items[i].product_id unless @estimate.line_items[i].nil?),
+						prompt: "Selecciona producto..."
+					%>
+				</td>
+				<td>
+					<%= lif.input :total_price,
+						label: "Total",
+						as: :string,
+						input_html: {
+							class: "input-small t",
+							id: "partial-amount"
+						},
+						disabled: true
+					%>
+				</td>
+				<td>
+					<div class="control-group" style="padding-left: 70px;">
+						<%= lif.link_to_remove "Quitar", class: "btn btn-mini btn-inverse" %>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<% i += 1 %>
+	<% end %>
+	<%= f.link_to_add "+ productos", :line_items, class: "btn btn-mini btn-success" %>
+	
+	<div style="margin-top: 30px;">
+		<table>
+			<tr>
+				<td>
+					<%= f.input :tax_id,
+						label: "Impuesto",
+						collection: Tax.all.map { |tax| ["#{tax.name} (#{tax.value.to_s}%)", "#{tax.id};#{tax.value}"] },
+						input_html: {
+							class: "input-large",
+							id: "tax1"
+						},
+						selected: ("#{@estimate.tax_id};#{@estimate.tax.value unless @estimate.tax_id.nil?}" unless @estimate.nil?),
+						prompt: "Selecciona impuesto..."
+					%>
+				</td>
+				<td>
+					<%= f.input :total_price,
+						label: "Total del albarán:",
+						as: :string,
+						input_html: {
+							class: "input-mini",
+							id: "total"
+						},
+						disabled: true
+					%>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<%= f.input :observations,
+		as: :ckeditor,
+		label: "Observaciones",
+		input_html: {
+			ckeditor: {
+				toolbar: "Mini"
+			},
+			class: "input-xlarge",
+			rows: 5
+		}
+	%>
+	
+	<div class="form-actions">
+		<%= f.button :submit, class: 'btn btn-primary' %>
+		<%= link_to t('.cancel', default: t("helpers.links.cancel")), estimates_path, class: 'btn' %>
+	</div>
+<% end %>

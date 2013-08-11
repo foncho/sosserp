@@ -1,0 +1,9 @@
+<tr>
+	<td><%= link_to payment_method.id, payment_method_path(payment_method) %></td>
+	<td><%= payment_method.name %></td>
+	<td><%= l payment_method.created_at, format: "%A, %d de %B de %Y" %></td>
+	<td>
+		<%= link_to t('.edit', default: t("helpers.links.edit")), edit_payment_method_path(payment_method), class: 'btn btn-mini' %>
+		<%= link_to t('.destroy', default: t("helpers.links.destroy")), payment_method_path(payment_method), method: :delete, data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) }, class: 'btn btn-mini btn-danger' %>
+	</td>
+</tr>

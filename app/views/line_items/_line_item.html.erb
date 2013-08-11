@@ -1,0 +1,17 @@
+<tr>
+	<td><%= line_item.quantity %></td>
+	<td>
+		<div style="text-align: left;">
+			<h5><%= line_item.product.name %></h5>
+			<% line_item.product.items.each do |item| %>
+				<%= item.title %><br />
+			<% end %>
+		</div>
+	</td>
+	<td><%= number_to_currency line_item.product.items.sum(:price) %></td>
+	<td><%= number_to_currency line_item.product.items.sum(:price) * line_item.quantity %></td>
+	<td><%= number_to_currency line_item.tax_calculation * line_item.quantity %></td>
+	<td><%= number_to_currency line_item.irpf_calculation * line_item.quantity %></td>
+	<td><%= number_to_currency (line_item.discount_calculation * -1) * line_item.quantity %></td>
+	<td><%= number_to_currency line_item.total_price %></td>
+</tr>

@@ -1,0 +1,97 @@
+<%- model_class = Invoice -%>
+
+<div class="page-header" style="border: 0;">
+	<div class="logo_sirokko"></div>
+	<div>
+		<h1 class="lead">
+			Sirokko Open Source Solutions, S.L.<br />
+			<div style="font-size: 12px;">
+				C.I.F.: B35095603<br />
+				C/. La Gomera, 49 San Fernando de Maspalomas<br />
+				tlf: 928.45.99.31 / 32<br />
+				email: info@sirokko.es
+			</div>
+		</h1>
+	</div>
+	
+	<h1 class="lead">
+		<%= t '.title', 
+			default: "Factura"
+		%>
+		<%= @invoice.number %>
+	</h1>
+	<div style="float: right; text-align: right;">
+		<h1 class="lead">
+			<%= @invoice.client.name unless @invoice.client.nil? %><br />
+			<div style="font-size: 12px;">
+				C.I.F.: <%= @invoice.client.cif unless @invoice.client.nil? %><br />
+				<%= @invoice.client.address unless @invoice.client.nil? %><br />
+				<% unless @invoice.client.phone.blank? %>
+					tlf: <%= @invoice.client.phone %><br />
+				<% end %>
+				email: <%= @invoice.client.email unless @invoice.client.nil? %>
+			</div>
+		</h1>
+	</div>
+</div>
+
+<table class="table table-striped">
+	<thead>
+		<th><%= "Cantidad" %></th>
+		<th><%= "Producto" %></th>
+		<th><%= "Precio unitario" %></th>
+		<th><%= "Importe" %></th>
+		<th><%= "Impuesto 1" %></th>
+		<th><%= "Impuesto 2" %></th>
+		<th><%= "Descuento" %></th>
+		<th><%= "Total" %></th>
+	</thead>
+	
+	<tbody>
+		<%= render @invoice.line_items %>
+	</tbody>
+</table>
+
+<% unless @invoice.payment_method.nil? %>
+	<div class="span8 alert alert-info" style="float: left; margin: 0 0 20px 0; width: 60%;">
+		Método de pago: <br />
+		<strong><%= @invoice.payment_method.name %></strong>
+	</div>
+<% end %>
+
+<div class="span8 alert alert-sirokko" style="float: left; margin: 0; width: 60%;">
+	<%= (@invoice.observations.blank? or @invoice.observations.nil?) ? "No hay observaciones." : @invoice.observations.html_safe %>
+</div>
+
+<table class="table table-striped" style="width: 20%; margin-left: 80%;">
+	<tr>
+		<td><%= "Subtotal" %></td>
+		<td style="text-align: right;"><%= number_to_currency @invoice.line_items.to_a.sum { |line| line.product.items.sum(:price) * line.quantity } %></td>
+	</tr>
+	<tr>
+		<%=  %>
+		<td><%= @invoice.taxes.map { |tax| tax.name }.first %> (<%= @invoice.taxes.first.value.to_f %>%)</td>
+		<td style="text-align: right;"><%= number_to_currency @invoice.line_items.to_a.sum { |line| line.tax_calculation * line.quantity } %></td>
+	</tr>
+	<% if @invoice.taxes.count > 1 %>
+		<tr>
+			<td><%= @invoice.taxes.map { |tax| tax.name }.last %> (<%= @invoice.taxes.last.value.to_f %>%)</td>
+			<td style="text-align: right;"><%= number_to_currency @invoice.line_items.to_a.sum { |line| line.irpf_calculation * line.quantity } %></td>
+		</tr>
+	<% end %>
+	<tr>
+		<td><%= "Descuento" %></td>
+		<td style="text-align: right; color: red;"><%= number_to_currency @invoice.line_items.to_a.sum { |line| line.discount_calculation * line.quantity } * -1 %></td>
+	</tr>
+	<tr>
+		<td><%= "TOTAL" %></td>
+		<td style="text-align: right; font-weight: bold;"><%= number_to_currency @invoice.total_price %></td>
+	</tr>
+</table>
+
+<div class="form-actions">
+	<%= link_to t('.back', default: t("helpers.links.back")), invoices_path, class: 'btn' %>
+	<%= link_to t('.edit', default: t("helpers.links.edit")), edit_invoice_path(@invoice), class: 'btn' %>
+	<%= link_to t('.print', default: t("helpers.links.print")), invoice_to_pdf_path(@invoice), class: 'btn btn-inverse' %>
+	<%= link_to t('.destroy', default: t("helpers.links.destroy")), invoice_path(@invoice), method: 'delete', data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) }, class: 'btn btn-danger' %>
+</div>

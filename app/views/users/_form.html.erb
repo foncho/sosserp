@@ -1,0 +1,104 @@
+<%= bootstrap_flash %>
+
+<%= simple_form_for @user, html: { class: "form-horizontal" } do |f| %>
+<div class="span5">
+	<%= f.input :name,
+		label: "Nombre",
+		required: false,
+		autofocus: true
+	%>
+	
+	<%= f.input :surname,
+		label: "Apellidos",
+		required: false,
+		autofocus: true
+	%>
+	
+	<%= f.input :pid,
+		label: "DNI",
+		required: false,
+		autofocus: true
+	%>
+	
+	<%= f.input :phone,
+		label: "Teléfono de contacto",
+		required: false,
+		autofocus: true
+	%>
+	
+	<%= f.input :address,
+		label: "Dirección postal",
+		required: false,
+		autofocus: true,
+		input_html: {
+			class: "input-large",
+			rows: 5
+		}
+	%>
+	
+	<%= f.input :observations,
+		label: "Observaciones",
+		required: false,
+		autofocus: true,
+		input_html: {
+			class: "input-large",
+			rows: 5
+		}
+	%>
+</div>
+
+<div class="span5 offset4">
+	<%= f.input :username,
+		label: "Nombre de usuario",
+		required: false,
+		autofocus: true
+	%>
+	
+	<%= f.input :email,
+		label: "Correo electrónico",
+		required: false,
+		autofocus: true
+	%>
+	
+	<%= f.input :role,
+		label: "Rol para el usuario",
+		as: :select,
+		collection: SimpleRoles.config.valid_roles,
+		disabled: ((current_user.has_any_role?(:admin, :user) or User.all.count == 1) ? false : true),
+		input_html: {
+			id: "user_role"
+		}
+	%>
+	
+	<div class="user_zone" style="display: none;">
+		<%= f.input :zone_id,
+			label: "Zona asignada",
+			required: false,
+			as: :select,
+			collection: Zone.all.map { |zone| [zone.name, zone.id] },
+			input_html: {
+				class: "zones"
+			},
+			disabled: ((current_user.has_any_role?(:admin, :user) or User.all.count == 1) ? false : true)
+		%>
+	</div>
+	
+	<%= f.input :password,
+		placeholder: "Nueva contraseña...",
+		input_html: {
+			id: "new_pass"
+		}
+	%>
+	<%= f.input :password_confirmation, placeholder: "Repetir nueva contraseña..." %>
+	
+	<div class="user_current_pass" style="display: none;">
+		<%= f.input :current_password, placeholder: "Antigua contraseña...", hint: "(sólo en el caso de cambio)" %>
+	</div>
+</div>
+
+	<div class="form-actions" style="float: left;">
+		<%= link_to t(".cancel", default: t("helpers.links.cancel")), users_path, class: "btn" %>
+		<%= f.button :submit, class: "btn btn-primary" %>
+	</div>
+
+<% end %>

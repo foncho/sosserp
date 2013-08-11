@@ -1,0 +1,59 @@
+<div class="box register offset4">
+	<h1 class="lead">Registrarse</h1>
+	
+	<%= simple_form_for resource, as: resource_name, url: registration_path(resource_name), html: { class: "form-horizontal", method: "post" } do |f| %>
+	
+		<%= bootstrap_flash %>
+
+		<%= f.input :username,
+			label: false,
+			required: false,
+			autofocus: true,
+			placeholder: t("devise.placeholders.username"),
+			input_html: {
+				class: "input-xlarge"
+			}
+		%>
+		<br />
+		<%= f.input :email,
+			label: false,
+			placeholder: t("devise.placeholders.email"),
+			as: :email,
+			required: false,
+			autofocus: true,
+			input_html: {
+				class: "input-xlarge"
+			}
+		%>
+		<br />
+		<%= f.input :password,
+			autofocus: true,
+			autocomplete: "off",
+			label: false,
+			placeholder: t("devise.placeholders.password"),
+			required: false,
+			hint: false,
+			input_html: {
+				class: "input-xlarge"
+			}
+		%>
+		<br />
+		<%= f.input :password_confirmation,
+			autofocus: true,
+			autocomplete: "off",
+			label: false,
+			placeholder: t("devise.placeholders.password_confirmation"),
+			required: false,
+			hint: false,
+			input_html: {
+				class: "input-xlarge"
+			}
+		%>
+
+		<div class="form-actions" style="border-top: 0; background: transparent; margin: 0; padding: 19px 0 20px;">
+	    	<%= f.button :submit, value: t("devise.buttons.sign_up"), class: 'btn btn-info' %>
+	    </div>
+	<% end %>
+
+	<%= render "devise/shared/links" %>
+</div>

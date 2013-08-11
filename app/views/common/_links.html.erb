@@ -1,0 +1,43 @@
+<li class="dropdown <%= 'active' if current_page?(clients_path) %>">
+	<%= link_to "Gestión", "#", class: "dropdown-toggle", data: { toggle: "dropdown" }, class: "header-link" %>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+		<li><%= link_to "Clientes", clients_path, class: "header-link" %></li>
+	</ul>
+</li>
+
+<li class="dropdown <%= 'active' if current_page?(estimates_path) or current_page?(new_estimate_path) %>">
+	<%= link_to "Presupuestos", "#", class: "dropdown-toggle header-link", data: { toggle: "dropdown" } %>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+		<li class="dropdown">
+			<%= link_to "Ver todos", estimates_path %>
+		</li>
+		<li class="dropdown">
+			<%= link_to "Nuevo", new_estimate_path %>
+		</li>
+	</ul>
+</li>
+
+<li class="dropdown <%= 'active' if current_page?(invoices_path) or current_page?(new_invoice_path) %>">
+	<%= link_to "Facturas", "#", class: "dropdown-toggle header-link", data: { toggle: "dropdown" } %>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+		<li class="dropdown">
+			<%= link_to "Ver facturas", invoices_path %>
+		</li>
+		<li class="dropdown">
+			<%= link_to "Nueva factura", new_invoice_path %>
+		</li>
+	</ul>
+</li>
+
+<li class="<%= 'active' if current_page?(products_path) %>">
+	<%= link_to "Productos", products_path, class: "header-link" %>
+</li>
+
+<li class="dropdown <%= 'active' if current_page?(taxes_path) or current_page?(payment_methods_path) or current_page?(users_path) %>">
+	<%= link_to "Otros", "#", class: "dropdown-toggle", data: { toggle: "dropdown" } %>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+		<li><%= link_to "Impuestos", taxes_path %></li>
+		<li><%= link_to "Métodos de pago", payment_methods_path %></li>
+		<li><%= link_to "Usuarios", users_path %></li>
+	</ul>
+</li>

@@ -1,0 +1,46 @@
+<div style="margin-top: 30px;">
+	<table>
+		<tr>
+			<% j = 0 %>
+			<%= f.simple_fields_for :rates do |rf| %>
+				<td>
+					<%= rf.input :tax_id,
+						label: "Impuesto #{j+1}",
+						collection: Tax.all.map { |tax| ["#{tax.name} (#{tax.value.to_s}%)", "#{tax.id};#{tax.value}"] },
+						input_html: {
+							class: "input-large",
+							id: "tax#{j+1}"
+						},
+						selected: ("#{@invoice.rates[j].tax_id};#{@invoice.rates[j].tax.value unless @invoice.rates[j].tax.nil?}" unless @invoice.nil?),
+						prompt: "Selecciona impuesto..."
+					%>
+				</td>
+				<% j += 1 %>
+			<% end %>
+			<td>
+				<%= f.input :total_price,
+					label: "Total de la factura:",
+					as: :string,
+					input_html: {
+						class: "input-mini",
+						id: "total"
+					},
+					disabled: true
+				%>
+			</td>
+		</tr>
+	</table>
+	<%= f.input :payment_method_id, label: "Forma de pago", collection: PaymentMethod.all.map { |payment_method| [payment_method.name, payment_method.id] }, required: false %>
+	<%= f.input :status, label: "Status", collection: ["Pendiente", "Pagada"] %>
+	<%= f.input :observations,
+		as: :ckeditor,
+		label: "Observaciones",
+		input_html: {
+			ckeditor: {
+				toolbar: "Mini"
+			},
+			class: "input-xlarge",
+			rows: 5
+		}
+	%>
+</div>

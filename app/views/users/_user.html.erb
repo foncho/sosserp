@@ -1,0 +1,25 @@
+<tr>
+	<td><%= link_to user.id, user_path(user) %></td>
+	<td><%= user.username %></td>
+	<td><%= user.email %></td>
+	<td><%= user.role %></td>
+	<td><%= (l user.last_sign_in_at, format: "%A, %d de %B de %Y, a las %H:%M") unless user.last_sign_in_at.nil? %></td>
+	<td><%= l user.created_at, format: "%A, %d de %B de %Y, a las %H:%M" %></td>
+	<td>
+		<% if user.has_role?(:delegate) %>
+			<%= link_to "#{user.bank_account.nil? ? 'Añadir' : 'Editar'} cuenta bancaria", (user.bank_account.nil? ? new_user_bank_account_path(user) : edit_user_bank_account_path(user, user.bank_account)), class: "btn btn-mini btn-info" %><br />
+		<% end %>
+		<%= link_to t('.edit', default: t("helpers.links.edit")), 
+			edit_user_path(user),
+			class: 'btn btn-mini'
+		%>
+		<%= link_to t('.destroy', default: t("helpers.links.destroy")),
+			user_path(user),
+			method: :delete,
+			data: {
+				confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?'))
+			},
+			class: 'btn btn-mini btn-danger'
+		%>
+	</td>
+</tr>

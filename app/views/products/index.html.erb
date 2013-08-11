@@ -1,0 +1,59 @@
+<%- model_class = Product -%>
+<div class="page-header">
+	<h1 class="lead"><%= t '.title', default: model_class.model_name.human.capitalize.pluralize %></h1>
+	
+	<% unless request.user_agent =~ /Mobile|webOS/ %>
+		<div style="float: right; margin-top: -60px;">
+			<div class="import-dialog">
+				<h4>Importar</h4>
+				<%= form_tag import_products_path, multipart: true do %>
+					<div class="fileupload fileupload-new" data-provides="fileupload">
+						<span class="btn btn-file">
+							<span class="fileupload-new">Elige fichero</span>
+							<span class="fileupload-exists">Cambiar</span>
+							<%= file_field_tag :file %>
+						</span>
+						<%= submit_tag "Importar", class: "btn btn-primary" %>
+						<br />
+						<span class="fileupload-preview"></span>
+						<a href="#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none">×</a>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	<% end %>
+	
+	<% if not @errors.nil? %>
+		<%= bootstrap_flash %>
+	<% end %>
+
+	<% unless request.user_agent =~ /Mobile|webOS/ %>
+		<div class="product-functions">
+			Download: 
+			<%= link_to "CSV", products_path(format: "csv") %> | <%= link_to "Excel", products_path(format: "xls") %>
+		</div>
+	<% end %>
+</div>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th><%= "ID" %></th>
+			<th><%= "Nombre" %></th>
+			<th><%= "Descripción" %></th>
+			<th><%= "Sub-items" %></th>
+			<th><%= "Precio total" %></th>
+			<th><%= t '.actions', default: t("helpers.actions") %></th>
+		</tr>
+	</thead>
+	
+	<tbody class="products">
+		<%= render @products %>
+	</tbody>
+</table>
+
+<div id="paginator" class="pagination">
+	<%= paginate @products, remote: true %>
+</div>
+
+<%= link_to t('.new', default: t("helpers.links.new")), new_product_path, class: 'btn btn-primary' %>

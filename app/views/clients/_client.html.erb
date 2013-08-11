@@ -1,0 +1,15 @@
+<tr>
+	<td><%= link_to client.code, edit_client_path(client) unless client.code.nil? %></td>
+	<td><%= client.cif unless client.cif.nil? %></td>
+	<td><%= client.name unless client.name.nil? %></td>
+	<td><%= client.discount.nil? ? 0 : client.discount.value.to_f %> %</td>
+	<td><%= client.email unless client.email.nil? %></td>
+	<td><%= client.phone unless client.phone.nil? %></td>
+	<td><%= client.address unless client.address.nil? %></td>
+	<td><%= client.city unless client.city.nil? %></td>
+	<td><%= client.contact unless client.contact.nil? %></td>
+	<td>
+		<%= link_to t('.edit', default: t("helpers.links.edit")), edit_client_path(client), class: 'btn btn-mini' %>
+		<%= link_to t('.destroy', default: t("helpers.links.destroy")), client_path(client), method: :delete, data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) }, class: 'btn btn-mini btn-danger' %>
+	</td>
+</tr>

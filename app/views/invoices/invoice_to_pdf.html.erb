@@ -1,0 +1,124 @@
+<div class="page-header" style="border: 0;">
+	<div class="logo_sirokko">
+		<%= image_tag "#{Rails.root}/app/assets/images/logo_sirokko_300.png" %>
+	</div>
+	<div>
+		<h1 class="lead">
+			Sirokko Open Source Solutions, S.L.<br />
+			<div style="font-size: 12px;">
+				C.I.F.: B35095603<br />
+				C/. La Gomera, 49 San Fernando de Maspalomas<br />
+				tlf: 928.45.99.31 / 32<br />
+				email: info@sirokko.es
+			</div>
+		</h1>
+	</div>
+	
+	<h1 class="lead">
+		<%= t '.title', 
+			default: "Factura"
+		%>
+		<%= @invoice.number %><br />
+		<div style="font-size: 12px;">Fecha: <%= l @invoice.expiration_date, format: "%A, %d de %B de %Y" %></div>
+	</h1>
+	
+	<div style="float: right; text-align: right; width: 50%; margin-top: -90px;">
+		<h1 class="lead">
+			<%= @invoice.client.name unless @invoice.client.nil? %><br />
+			<div style="font-size: 12px;">
+				C.I.F.: <%= @invoice.client.cif unless @invoice.client.nil? %><br />
+				<%= @invoice.client.address unless @invoice.client.nil? %><br />
+				<% unless @invoice.client.phone.blank? %>
+					tlf: <%= @invoice.client.phone %><br />
+				<% end %>
+				email: <%= @invoice.client.email unless @invoice.client.nil? %>
+			</div>
+		</h1>
+	</div>
+</div>
+
+<br />
+
+<div class="row-fluid" id="line-items">
+	<table class="table table-striped">
+		<thead>
+			<th><%= "Cantidad" %></th>
+			<th><%= "Concepto" %></th>
+			<th><%= "Precio unitario" %></th>
+			<th><%= "Importe" %></th>
+			<th><%= "Impuesto" %></th>
+			<% unless @invoice.client.discount.value == 0.to_f %>
+				<th><%= "Descuento" %></th>
+			<% end %>
+			<th><%= "Total" %></th>
+		</thead>
+
+		<tbody>
+			<% @invoice.line_items.each do |line_item| %>
+			<tr>
+				<td><%= line_item.quantity %></td>
+				<td style="max-width: 175px;">
+					<div style="text-align: left;">
+						<h5><%= line_item.product.name %></h5>
+						<ul>
+							<% line_item.product.items.each do |item| %>
+								<li><%= item.title %></li>
+							<% end %>
+						</ul>
+					</div>
+				</td>
+				<td><%= number_to_currency line_item.product.items.sum(:price) %></td>
+				<td>
+					<%= number_to_currency line_item.product.items.sum(:price) * line_item.quantity %>
+				</td>
+				<td>
+					<%= number_to_currency line_item.tax_calculation * line_item.quantity %>
+				</td>
+				<% unless @invoice.client.discount.value == 0.to_f %>
+					<td>
+						<%= number_to_currency (line_item.discount_calculation * -1) * line_item.quantity %>
+					</td>
+				<% end %>
+				<td><%= number_to_currency line_item.total_price %></td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+	
+	<% unless @invoice.payment_method.nil? %>
+		<div class="span8 alert alert-info" style="float: left; margin: 0 0 20px 0; width: 60%;">
+			Método de pago: <br />
+			<strong><%= @invoice.payment_method.name %></strong>
+		</div>
+	<% end %>
+	
+	<div class="span8 alert alert-sirokko" style="float: left; margin: 0; width: 60%;">
+		<%= (@invoice.observations.blank? or @invoice.observations.nil?) ? "No hay observaciones." : @invoice.observations.html_safe %>
+	</div>
+	
+	<table class="table table-striped" style="width: 30%; margin-left: 70%;">
+		<tr>
+			<td><%= "Subtotal" %></td>
+			<td style="text-align: right;"><%= number_to_currency @invoice.line_items.to_a.sum { |line| line.product.items.sum(:price) * line.quantity } %></td>
+		</tr>
+		<tr>
+			<%=  %>
+			<td><%= @invoice.taxes.map { |tax| tax.name }.first %> (<%= @invoice.taxes.first.value.to_f %>%)</td>
+			<td style="text-align: right;"><%= number_to_currency @invoice.line_items.to_a.sum { |line| line.tax_calculation * line.quantity } %></td>
+		</tr>
+		<% if @invoice.taxes.count > 1 %>
+			<tr>
+				<td><%= @invoice.taxes.map { |tax| tax.name }.last %> (<%= @invoice.taxes.last.value.to_f %>%)</td>
+				<td style="text-align: right;"><%= number_to_currency @invoice.line_items.to_a.sum { |line| line.irpf_calculation * line.quantity } %></td>
+			</tr>
+		<% end %>
+		<tr>
+			<td><%= "Descuento" %></td>
+			<td style="text-align: right; color: red;"><%= number_to_currency @invoice.line_items.to_a.sum { |line| line.discount_calculation * line.quantity } * -1 %></td>
+		</tr>
+		<tr>
+			<td><%= "TOTAL" %></td>
+			<td style="text-align: right; font-weight: bold;"><%= number_to_currency @invoice.total_price %></td>
+		</tr>
+	</table>
+</div>

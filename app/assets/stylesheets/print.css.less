@@ -1,0 +1,108 @@
+@media print {
+	@import "bootstrap_and_overrides.css.less";
+	
+	body {
+		font-family: @sansFontFamily;
+	}
+
+	body > .container {
+		padding: 20px 0;
+	}
+
+	body > .container > .row {
+		margin: 0;
+	}
+
+	body > .container > .row > .span9 {
+		width: 100%;
+		margin: 0;
+	}
+
+	[class*="span"] {
+		margin-left: 20px;
+		margin-right: 10px;
+	}
+
+	.table {
+		border-collapse: collapse;
+		font-size: @fontSizeSmall;
+	}
+
+	.table th, .table td {
+		vertical-align: middle;
+		border: 1px solid #ddd;
+	}
+
+	.table thead th {
+		vertical-align: middle;
+	}
+
+	.table thead:first-child tr:first-child th {
+		border-top: 1px solid #ddd;
+	}
+
+	.table tbody tr td, .table thead th:last-child, .table thead tr th, .table tbody tr td:last-child {
+		text-align: center;
+	}
+
+	table {
+		border-collapse: inherit;
+		width: 100%;
+	}
+
+	.header {
+		.size(auto, 100%);
+		margin: 0;
+		border-collapse: 0;
+	}
+
+	.header thead tr th:first-child {
+		border: 0;
+	}
+
+	.header thead tr th {
+		.size(auto, 25%);
+		padding: 10px 0;
+		border: 1px solid #ddd;
+		.border-radius(5px 5px 0 0);
+		padding: 10px;
+		margin: 0 1px;
+	}
+
+	.data {
+		font-size: 10px;
+	}
+
+	table.form-search {
+		float: right;
+		width: auto;
+	}
+
+	table.form-search > tbody > tr > td > div {
+		margin-bottom: 0;
+	}
+
+	.alert {
+		position: relative;
+	}
+
+	.popover {
+		max-width: 100%;
+	}
+
+	.page-header {
+		float: left;
+		width: 100%;
+	}
+	
+	.logo_sirokko {
+		float: right;
+		background-image: url(/assets/logo_sirokko_300.png);
+		width: 300px;
+		height: 124px;
+	}
+	
+	#row {
+		page-break-before: always;
+	}
+}

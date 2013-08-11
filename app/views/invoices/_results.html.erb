@@ -1,0 +1,13 @@
+<% iva = Tax.where("name like '%IVA%'").sort %>
+<% igic = Tax.where("name like '%IGIC%'").sort %>
+<% irpf = Tax.where("name like '%IRPF%'").sort %>
+
+<% cache @invoices_results do %>
+	<tr style="font-weight: bold;">
+		<td><%= number_to_currency @invoices_results.to_a.sum { |item| item.subtotal } %></td>
+		<td><%= number_to_currency @invoices_results.where("r.tax_id IN (?)", Tax.where("name like '%IGIC%'").sort).to_a.sum { |item| item.tax_calculation * item.quantity } %></td>
+		<td><%= number_to_currency @invoices_results.where("r.tax_id IN (?)", Tax.where("name like '%IVA%'").sort).to_a.sum { |item| item.tax_calculation * item.quantity } %></td>
+		<td style="color: red;"><%= number_to_currency @invoices_results.where("r.tax_id IN (?)", Tax.where("name like '%IRPF%'").sort).to_a.sum { |item| item.tax_calculation * item.quantity } * -1 %></td>
+		<td><%= number_to_currency @invoices_results.to_a.sum { |item| item.total_price } %></td>
+	</tr>
+<% end %>
