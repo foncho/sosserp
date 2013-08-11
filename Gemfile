@@ -1,13 +1,13 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 3.2.13'
+gem 'rails', '~> 3.2.14'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
 
 # Devise for authentication
-gem 'devise', github: 'plataformatec/devise', branch: 'rails4'
+gem 'devise'
 gem 'cancan'
 gem 'simple_roles'
 
@@ -45,7 +45,7 @@ gem 'country_select'
 gem 'localized_country_select'
 
 # Files management
-gem 'paperclip', github: 'thoughtbot/paperclip'
+gem 'paperclip'
 
 # CSV import/export
 gem 'roo'
@@ -62,5 +62,3 @@ group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
 end
-
-gem 'newrelic_rpm'
