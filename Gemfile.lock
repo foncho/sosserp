@@ -91,7 +91,8 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.23)
     mini_portile (0.5.1)
-    multi_json (1.7.8)
+    multi_json (1.7.9)
+    mysql2 (0.3.13)
     nested_form (0.3.2)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
@@ -102,7 +103,6 @@ GEM
       cocaine (~> 0.5.0)
       mime-types
     pdfkit (0.5.4)
-    pg (0.16.0)
     polyglot (0.3.3)
     rack (1.4.5)
     rack-cache (1.2)
@@ -187,10 +187,10 @@ DEPENDENCIES
   kaminari
   less-rails
   localized_country_select
+  mysql2
   nested_form
   paperclip
   pdfkit
-  pg
   rails (~> 3.2.14)
   roo
   sdoc

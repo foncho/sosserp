@@ -1,6 +1,22 @@
-development:
-  adapter: postgresql
+production:
+  adapter: mysql2
   encoding: utf8
   database: sosserp
   pool: 5
   username: sirokko
+  password: Cachuli1972.
+
+development:
+  adapter: mysql2
+  encoding: utf8
+  database: sosserp
+  pool: 5
+  username: sirokko
+  password: Cachuli1972.
+
+#development:
+#  adapter: postgresl
+#  encoding: utf8
+#  database: sosserp
+#  pool: 5
+#  username: sirokko

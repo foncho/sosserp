@@ -140,7 +140,7 @@ ActiveRecord::Schema.define(:version => 18) do
   create_table "products", :force => true do |t|
     t.integer  "code",        :limit => 8
     t.string   "name",                     :default => "", :null => false
-    t.text     "description",              :default => ""
+    t.text     "description"
     t.datetime "created_at",                               :null => false
     t.datetime "updated_at",                               :null => false
   end
@@ -150,7 +150,7 @@ ActiveRecord::Schema.define(:version => 18) do
 
   create_table "projects", :force => true do |t|
     t.integer  "estimate_id"
-    t.text     "description",             :default => "", :null => false
+    t.text     "description",                             :null => false
     t.integer  "estimation_time_in_days", :default => 30
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false

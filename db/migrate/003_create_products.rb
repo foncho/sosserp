@@ -4,7 +4,7 @@ class CreateProducts < ActiveRecord::Migration
       t.integer :code, limit: 8
       
       t.string :name, null: false, default: ""
-      t.text :description, default: ""
+      t.text :description
 
       t.timestamps
     end
